@@ -67,16 +67,15 @@ Após isso, qualquer comando registrado será aceito até a execução do progra
 
 ## Comandos Suportados (Exemplo)
 
-| Palavra‑chave | Ação executada           |
-| ------------- | ------------------------ |
-| photoshop     | Abre o Adobe Photoshop   |
-| desenho       | Abre o CorelDRAW         |
-| navegador     | Abre o Firefox           |
-| música        | Abre o Spotify           |
-| java          | Abre o IntelliJ          |
-| código        | Abre o VS Code           |
-| arquivos      | Abre Downloads           |
-| trabalho      | Abre a pasta de trabalho |
+| Palavra‑chave | Ação executada          |
+|---------------|-------------------------|
+| photoshop     | Abre o Adobe Photoshop  |
+| desenho       | Abre o CorelDRAW        |
+| navegador     | Abre o Firefox          |
+| som           | Abre o Spotify          |
+| java          | Abre o IntelliJ         |
+| trabalho      | Abre o VS Code          |
+| arquivos      | Abre Pasta de Trabalhos |
 
 ---
 
@@ -156,4 +155,3 @@ comandos.put("palavra", () -> Executor.exec("caminho do programa"));
 
 Uso livre, modifique conforme desejar.
 
----
