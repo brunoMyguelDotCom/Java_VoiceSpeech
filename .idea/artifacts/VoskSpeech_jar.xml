@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="VoskSpeech:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/VoskSpeech_jar</output-path>
+    <root id="archive" name="VoskSpeech.jar">
+      <element id="module-output" name="VoskSpeech" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/jna-5.13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/vosk-0.3.45.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/jna-platform-5.13.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

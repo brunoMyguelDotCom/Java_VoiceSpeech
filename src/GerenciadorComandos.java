@@ -7,14 +7,17 @@ public class GerenciadorComandos {
     private boolean modoComando = false;
 
     public GerenciadorComandos() {
+        // Executáveis diretos (caminhos com espaços entre aspas)
         comandos.put("photoshop", () -> Executor.exec("\"C:\\Program Files\\Adobe\\Adobe Photoshop 2023\\Photoshop.exe\""));
         comandos.put("desenho", () -> Executor.exec("\"C:\\Program Files\\Corel\\CorelDRAW Graphics Suite 2020\\Programs64\\CorelDRW.exe\""));
         comandos.put("navegador", () -> Executor.exec("\"C:\\Program Files\\Mozilla Firefox\\firefox.exe\""));
-        comandos.put("música", () -> Executor.exec("C:\\Users\\Bruno\\AppData\\Roaming\\Spotify\\Spotify.exe"));
         comandos.put("java", () -> Executor.exec("\"C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.2.2\\bin\\idea64.exe\""));
-        comandos.put("código", () -> Executor.exec("\"C:\\Users\\Bruno\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\""));
-        comandos.put("arquivos", () -> Executor.exec("explorer.exe C:\\\\Users\\\\Bruno\\\\Downloads"));
-        comandos.put("trabalho", () -> Executor.exec("explorer.exe F:\\00 TRABALHO"));
+        comandos.put("arquivos", () -> Executor.exec("explorer.exe \"F:\\00 TRABALHO\""));
+
+        // Atalhos .lnk usando explorer.exe
+        comandos.put("som", () -> Executor.exec("explorer.exe \"C:\\Users\\Bruno\\Desktop\\Spotify.lnk\""));
+        comandos.put("trabalho", () -> Executor.exec("explorer.exe \"C:\\Users\\Bruno\\Desktop\\Visual Studio Code.lnk\""));
+
     }
 
     public void ativarModoComando() {

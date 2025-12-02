@@ -1,14 +1,14 @@
 # Assistente de Voz em Java (Vosk Speech Recognition)
 
-Este projeto implementa um **assistente de voz em Java** utilizando o **Vosk** para reconhecimento de fala offline. Ele permite ativar um "modo comando" por voz e, em seguida, executar programas do Windows com base em palavras‑chave detectadas.
+Este projeto implementa um **assistente de voz em Java** utilizando o **Vosk** para reconhecimento de fala offline. Ele permite ativar um “modo comando” por voz e executar programas, pastas e atalhos do Windows através de palavras-chave. O sistema foi atualizado nesta versão para incluir comandos via executáveis diretos e também via atalhos `.lnk` executados pelo `explorer.exe`, permitindo maior flexibilidade no controle dos programas.
 
-## Funcionalidades
+O assistente possui:
 
-* Reconhecimento de voz offline usando **Vosk**.
-* Ativação por palavra-chave ("computador").
-* Execução automática de programas ao detectar comandos específicos.
-* Sons de **ativação** e **desativação**.
-* Sistema modular de gerenciamento de comandos.
+* Reconhecimento de voz offline (Vosk)
+* Ativação por palavra-chave ("computador")
+* Execução de programas instalados ou atalhos `.lnk`
+* Sons de ativação e desativação
+* Sistema de comandos modular e expansível de gerenciamento de comandos.
 
 ---
 
@@ -144,7 +144,7 @@ comandos.put("palavra", () -> Executor.exec("caminho do programa"));
 
 ---
 
-##  Observações Importantes
+## Observações Importantes
 
 * Todos os caminhos devem existir no sistema do usuário.
 * O Vosk funciona totalmente offline.
@@ -157,5 +157,3 @@ comandos.put("palavra", () -> Executor.exec("caminho do programa"));
 Uso livre, modifique conforme desejar.
 
 ---
-
-Se quiser, posso melhorar o README com imagens, badges, GIF demonstrando o assistente, ou instruções mais avançadas para tornar o projeto profissional.
