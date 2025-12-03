@@ -1,5 +1,8 @@
 # Assistente de Voz em Java (Vosk Speech Recognition)
 
+# DEMO:
+<a href="https://youtu.be/MhRuIbfOKZs" target="_blank"> </a>
+
 Este projeto implementa um **assistente de voz em Java** utilizando o **Vosk** para reconhecimento de fala offline. Ele permite ativar um “modo comando” por voz e executar programas, pastas e atalhos do Windows através de palavras-chave. O sistema foi atualizado nesta versão para incluir comandos via executáveis diretos e também via atalhos `.lnk` executados pelo `explorer.exe`, permitindo maior flexibilidade no controle dos programas.
 
 O assistente possui:
