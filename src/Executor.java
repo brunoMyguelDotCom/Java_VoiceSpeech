@@ -6,7 +6,7 @@ public class Executor {
 
         try {
             Runtime.getRuntime().exec(comando);
-            System.out.println("caminho: " + comando);
+//            Sqqqqqystem.out.println("caminho: " + comando);
         } catch (IOException e) {
             e.printStackTrace();
         }

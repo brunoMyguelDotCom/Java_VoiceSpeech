@@ -1,4 +1,3 @@
-import jdk.nashorn.internal.objects.NativeJSON;
 import org.vosk.Model;
 import org.vosk.Recognizer;
 import org.vosk.LibVosk;
@@ -28,8 +27,8 @@ public class ReconhecedorVoz {
 
         byte[] buffer = new byte[4096];
 
-        System.out.println("Fale algo...");
-        Som.tocar("src/sons/ativar.wav");
+//        System.out.println("Fale algo...");
+        Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\AssistenteVoz\\VoskSpeech\\src\\sons\\ativar.wav");
 
         while (true) {
             int bytesRead = microphone.read(buffer, 0, buffer.length);

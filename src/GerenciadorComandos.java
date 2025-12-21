@@ -11,7 +11,7 @@ public class GerenciadorComandos {
     public short numTentativas = 0;
 
     public GerenciadorComandos() {
-        // Executáveis diretos (caminhos com espaços entre aspas)
+        // Executáveis diretos
         comandos.put("photoshop", () -> Executor.exec("\"C:\\Program Files\\Adobe\\Adobe Photoshop 2023\\Photoshop.exe\""));
         comandos.put("desenho", () -> Executor.exec("\"C:\\Program Files\\Corel\\CorelDRAW Graphics Suite 2020\\Programs64\\CorelDRW.exe\""));
         comandos.put("navegador", () -> Executor.exec("\"C:\\Program Files\\Mozilla Firefox\\firefox.exe\""));
@@ -23,23 +23,20 @@ public class GerenciadorComandos {
         comandos.put("trabalho", () -> Executor.exec("explorer.exe \"C:\\Users\\Bruno\\Desktop\\Visual Studio Code.lnk\""));
         comandos.put("brilho", () -> Executor.exec("explorer.exe \"C:\\Users\\Bruno\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Dimmer.lnk\""));
         comandos.put("delta", () -> Executor.exec("explorer.exe \"\"C:\\Users\\Bruno\\Desktop\\Delta Force.url\""));
-
     }
 
     public void ativarModoComando() {
         modoComando = true;
-        System.out.println("Modo comando ativado...");
-        Som.tocar("src/sons/ativar.wav");
+//      System.out.println("Modo comando ativado...");
+        Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\AssistenteVoz\\VoskSpeech\\src\\sons\\ativar.wav");
     }
 
     public void processarTexto(String texto) {
         texto = texto.toLowerCase();
-
         if (texto.contains("computador") && !modoComando) {
             ativarModoComando();
             return;
         }
-
         // flag
         boolean encontrado = false;
         if (modoComando) {
@@ -48,15 +45,18 @@ public class GerenciadorComandos {
                     encontrado = true;
                     comandos.get(comandoChave).run();
                     modoComando = false;
-                    Som.tocar("src/sons/desativar.wav");
+
+//                    System.out.println("Modo comando desativado...");
+
+                    Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\VoiceAssistant\\src\\sons\\desativar.wav");
                     return;
                 }
             }
             if (!encontrado) {
-                Som.tocar("src/sons/erro.wav");
+                Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\VoiceAssistant\\src\\sons\\erro.wav");
                 numTentativas++;
                 if (numTentativas == 3) {
-                    Som.tocar("src/sons/desativar.wav");
+                    Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\VoiceAssistant\\src\\sons\\desativar.wav");
                     numTentativas = 0;
                     modoComando = false;
                 }

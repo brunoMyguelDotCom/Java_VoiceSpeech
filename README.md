@@ -1,157 +1,146 @@
 # Assistente de Voz em Java (Vosk Speech Recognition)
 
-Este projeto implementa um **assistente de voz em Java** utilizando o **Vosk** para reconhecimento de fala offline. Ele permite ativar um “modo comando” por voz e executar programas, pastas e atalhos do Windows através de palavras-chave. O sistema foi atualizado nesta versão para incluir comandos via executáveis diretos e também via atalhos `.lnk` executados pelo `explorer.exe`, permitindo maior flexibilidade no controle dos programas.
+##  **- Vídeo demonstrativo:**
+[![Assista ao vídeo no YouTube](https://img.youtube.com/vi/MhRuIbfOKZs/hqdefault.jpg)](https://youtu.be/MhRuIbfOKZs)
 
-O assistente possui:
+---
 
-* Reconhecimento de voz offline (Vosk)
-* Ativação por palavra-chave ("computador")
-* Execução de programas instalados ou atalhos `.lnk`
-* Sons de ativação e desativação
-* Sistema de comandos modular e expansível de gerenciamento de comandos.
+Este projeto implementa um **assistente de voz offline em Java** utilizando o **Vosk Speech Recognition**.  
+Ele permite a ativação por palavra-chave, execução de comandos do Windows (programas, pastas, atalhos `.lnk`) e inclui um sistema robusto de controle de erros com feedback sonoro.
+
+---
+
+## Principais Recursos
+
+* Reconhecimento de voz totalmente **offline** (Vosk)
+* Palavra de ativação: **“computador”**
+* Execução de programas, pastas e atalhos `.lnk`
+* Sons de ativação, desativação e erro
+* Sistema de detecção de comando inválido:
+    * 1 erro → toca **erro.wav**
+    * Após **3 erros**, o assistente toca **desativar.wav**, desliga o modo comando e só volta com “computador”
+* Arquitetura modular e expansível para novos comandos
+* Captura de áudio configurada para **16000 Hz, 16 bits, mono**
 
 ---
 
 ## Estrutura do Projeto
 
-```
 Main.java
 Executor.java
 GerenciadorComandos.java
 ReconhecedorVoz.java
 Som.java
-```
+
 
 ---
 
-## Como Funciona
+## Funcionamento Geral
 
-### 1. **Main**
+### 1. Main
+Carrega o modelo Vosk, inicializa o gerenciador e inicia o loop de reconhecimento.
 
-Inicializa o gerenciador de comandos e o reconhecedor de voz.
+### 2. Executor
+Executa programas, atalhos e pastas através de `Runtime.getRuntime().exec()`.
 
-### 2. **Executor**
+### 3. GerenciadorComandos
+Responsável por:
 
-Executa comandos do sistema via `Runtime.getRuntime().exec()`.
+* Armazenar comandos em um mapa `Map<String, Runnable>`
+* Ativar e desativar o modo de comandos
+* Controlar tentativas inválidas
+* Reproduzir sons adequados (ativação, desativação, erro)
 
-### 3. **GerenciadorComandos**
+### 4. ReconhecedorVoz
+* Configuração do microfone
+* Processamento contínuo de áudio
+* Envio do texto reconhecido para o gerenciador
 
-* Mantém um mapa de comandos → ações.
-* Ativa/desativa o "modo comando".
-* Dispara sons de confirmação.
-
-### 4. **ReconhecedorVoz**
-
-* Configura o microfone.
-* Carrega o modelo Vosk.
-* Processa áudio continuamente.
-* Envia o texto reconhecido para o `GerenciadorComandos`.
-
-### 5. **Som**
-
-Toca arquivos `.wav` usados para indicar ativação e desativação.
+### 5. Som
+Toca arquivos WAV locais via `Clip`.
 
 ---
 
-##  Palavra de Ativação
+## Palavra de Ativação
 
-O assistente entra no modo de escuta de comandos quando identifica a palavra:
+O assistente entra no modo comando ao detectar: "computador"
 
-```
-computador
-```
 
-Após isso, qualquer comando registrado será aceito até a execução do programa.
+Enquanto esse modo estiver ativo, qualquer palavra-chave registrada será interpretada como ação.
 
 ---
 
-## Comandos Suportados (Exemplo)
+## Comportamento para Comandos Inválidos
 
-| Palavra‑chave | Ação executada          |
-|---------------|-------------------------|
-| photoshop     | Abre o Adobe Photoshop  |
-| desenho       | Abre o CorelDRAW        |
-| navegador     | Abre o Firefox          |
-| som           | Abre o Spotify          |
-| java          | Abre o IntelliJ         |
-| trabalho      | Abre o VS Code          |
-| arquivos      | Abre Pasta de Trabalhos |
+Quando o assistente está no modo comando:
 
----
-
-## Sons
-
-Dois sons são usados:
-
-* **ativar.wav** → quando o assistente entra em modo comando
-* **desativar.wav** → após executar um comando
+1. Se o texto reconhecido **não corresponder a nenhum comando**, toca `erro.wav`.
+2. Cada erro incrementa o contador `numTentativas`.
+3. Ao atingir **3 erros**, o assistente:
+    * toca **desativar.wav**
+    * sai do modo comando
+    * zera o contador de tentativas
+    * só reativa com “computador”
 
 ---
 
-## Dependências
+## Exemplos de Comandos
 
-* Java 8+
-* Biblioteca **Vosk Java**
-* Modelo Vosk (ex.: `vosk-model-small-pt-0.3`)
-
-Adicione o `.jar` do Vosk ao seu classpath.
-
----
-
-##  Configuração do Microfone
-
-O áudio é capturado em:
-
-```
-16000 Hz, 16 bits, mono
-```
-
-Ideal para modelos do Vosk.
-
----
-
-##  Como Executar
-
-1. Baixe um modelo PT do Vosk
-2. Configure o caminho no código:
-
-```
-new Model("CAMINHO_DO_MODELO");
-```
-
-3. Compile tudo:
-
-```
-javac *.java
-```
-
-4. Execute:
-
-```
-java Main
-```
+| Palavra-chave | Ação |
+|---------------|------|
+| photoshop | Abre o Adobe Photoshop |
+| desenho | Abre o CorelDRAW |
+| navegador | Abre o Firefox |
+| som | Abre o Spotify via `.lnk` |
+| java | Abre o IntelliJ IDEA |
+| arquivos | Abre uma pasta específica |
+| trabalho | Abre o VS Code via `.lnk` |
+| brilho | Abre o Dimmer via atalho |
 
 ---
 
 ## Adicionando Novos Comandos
 
-No arquivo `GerenciadorComandos.java`, basta adicionar:
+No arquivo GerenciadorComandos.java, basta adicionar:
 
-```java
-comandos.put("palavra", () -> Executor.exec("caminho do programa"));
-```
+    comandos.put("palavraChave", () -> Executor.exec("caminho ou comando aqui"));
 
 ---
 
-## Observações Importantes
+## Dependências
 
-* Todos os caminhos devem existir no sistema do usuário.
-* O Vosk funciona totalmente offline.
-* Caso o microfone não abra, verifique permissões do Windows.
+-   Java 8+
+-   Biblioteca Vosk Java
+-   Modelo PT do Vosk (ex.: vosk-model-small-pt-0.3)
+-   JAR do Vosk incluído no classpath
 
 ---
 
-## Licença
+## Configuração do Microfone
 
-Uso livre, modifique conforme desejar.
+    16000 Hz  
+    16 bits  
+    Mono
+
+
+---
+
+## Como Executar
+
+1.  Baixe um modelo PT do Vosk.
+2.  Ajuste o caminho no código:
+
+    new Model("CAMINHO_DO_MODELO");
+
+3.  Compile:
+
+    javac *.java
+
+4.  Execute:
+
+    java Main
+
+---
+
+# Licença: Livre para uso, modificação e distribuição.
 
