@@ -1,10 +1,14 @@
+// Todos os prints foram utilizados para facilitar o debug
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class GerenciadorComandos {
 
-    private Map<String, Runnable> comandos = new HashMap<>();
+    private final Map<String, Runnable> comandos = new HashMap<>();
     private boolean modoComando = false;
+
+    public short numTentativas = 0;
 
     public GerenciadorComandos() {
         // Executáveis diretos (caminhos com espaços entre aspas)
@@ -17,30 +21,44 @@ public class GerenciadorComandos {
         // Atalhos .lnk usando explorer.exe
         comandos.put("som", () -> Executor.exec("explorer.exe \"C:\\Users\\Bruno\\Desktop\\Spotify.lnk\""));
         comandos.put("trabalho", () -> Executor.exec("explorer.exe \"C:\\Users\\Bruno\\Desktop\\Visual Studio Code.lnk\""));
+        comandos.put("brilho", () -> Executor.exec("explorer.exe \"C:\\Users\\Bruno\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Dimmer.lnk\""));
+        comandos.put("delta", () -> Executor.exec("explorer.exe \"\"C:\\Users\\Bruno\\Desktop\\Delta Force.url\""));
 
     }
 
     public void ativarModoComando() {
         modoComando = true;
         System.out.println("Modo comando ativado...");
-        Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\AssistenteVoz\\VoskSpeech\\src\\sons\\ativar.wav");
+        Som.tocar("src/sons/ativar.wav");
     }
 
     public void processarTexto(String texto) {
         texto = texto.toLowerCase();
 
-        if(texto.contains("computador")){
+        if (texto.contains("computador") && !modoComando) {
             ativarModoComando();
             return;
         }
 
+        // flag
+        boolean encontrado = false;
         if (modoComando) {
             for (String comandoChave : comandos.keySet()) {
                 if (texto.contains(comandoChave)) {
+                    encontrado = true;
                     comandos.get(comandoChave).run();
                     modoComando = false;
-                    Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\AssistenteVoz\\VoskSpeech\\src\\sons\\desativar.wav");
+                    Som.tocar("src/sons/desativar.wav");
                     return;
+                }
+            }
+            if (!encontrado) {
+                Som.tocar("src/sons/erro.wav");
+                numTentativas++;
+                if (numTentativas == 3) {
+                    Som.tocar("src/sons/desativar.wav");
+                    numTentativas = 0;
+                    modoComando = false;
                 }
             }
         }
