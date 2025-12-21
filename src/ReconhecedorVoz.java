@@ -1,6 +1,6 @@
 import org.vosk.Model;
 import org.vosk.Recognizer;
-import org.vosk.LibVosk;
+
 
 import javax.sound.sampled.*;
 
@@ -14,7 +14,7 @@ public class ReconhecedorVoz {
 
     public void iniciar() throws Exception {
 
-        Model model = new Model("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\AssistenteVoz\\VoskSpeech\\vosk-model-small-pt-0.3");
+        Model model = new Model("F:/00 TRABALHO/00__CODES/CODIGOS_PESSOAIS/Codes/Java/OUTROS/VoiceAssistant/vosk-model-small-pt-0.3");
 
         AudioFormat format = new AudioFormat(16000, 16, 1, true, false);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -28,7 +28,9 @@ public class ReconhecedorVoz {
         byte[] buffer = new byte[4096];
 
 //        System.out.println("Fale algo...");
-        Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\AssistenteVoz\\VoskSpeech\\src\\sons\\ativar.wav");
+        // som de inicializacao do software
+        Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\VoiceAssistant\\src\\sons\\start.wav");
+
 
         while (true) {
             int bytesRead = microphone.read(buffer, 0, buffer.length);

@@ -28,7 +28,7 @@ public class GerenciadorComandos {
     public void ativarModoComando() {
         modoComando = true;
 //      System.out.println("Modo comando ativado...");
-        Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\AssistenteVoz\\VoskSpeech\\src\\sons\\ativar.wav");
+        Som.tocar("F:\\00 TRABALHO\\00__CODES\\CODIGOS_PESSOAIS\\Codes\\Java\\OUTROS\\VoiceAssistant\\src\\sons\\ativar.wav");
     }
 
     public void processarTexto(String texto) {
