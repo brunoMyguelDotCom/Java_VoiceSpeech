@@ -26,24 +26,24 @@ Ele permite a ativação por palavra-chave, execução de comandos do Windows (p
 
 ## Estrutura do Projeto
 
-Main.java
-Executor.java
-GerenciadorComandos.java
-ReconhecedorVoz.java
-Som.java
+main.java.com.voiceassistant.app.VoiceAssistantApp.java
+main.java.com.voiceassistant.infrastructure.CommandExecutor.java
+main.java.com.voiceassistant.application.CommandService.java
+main.java.com.voiceassistant.infrastructure.VoiceRecognizer.java
+main.java.com.voiceassistant.audio.SoundPlayer.java
 
 
 ---
 
 ## Funcionamento Geral
 
-### 1. Main
+### 1. main.java.com.voiceassistant.app.VoiceAssistantApp
 Carrega o modelo Vosk, inicializa o gerenciador e inicia o loop de reconhecimento.
 
-### 2. Executor
+### 2. main.java.com.voiceassistant.infrastructure.CommandExecutor
 Executa programas, atalhos e pastas através de `Runtime.getRuntime().exec()`.
 
-### 3. GerenciadorComandos
+### 3. main.java.com.voiceassistant.application.CommandService
 Responsável por:
 
 * Armazenar comandos em um mapa `Map<String, Runnable>`
@@ -51,12 +51,12 @@ Responsável por:
 * Controlar tentativas inválidas
 * Reproduzir sons adequados (ativação, desativação, erro)
 
-### 4. ReconhecedorVoz
+### 4. main.java.com.voiceassistant.infrastructure.VoiceRecognizer
 * Configuração do microfone
 * Processamento contínuo de áudio
 * Envio do texto reconhecido para o gerenciador
 
-### 5. Som
+### 5. main.java.com.voiceassistant.audio.SoundPlayer
 Toca arquivos WAV locais via `Clip`.
 
 ---
@@ -101,9 +101,9 @@ Quando o assistente está no modo comando:
 
 ## Adicionando Novos Comandos
 
-No arquivo GerenciadorComandos.java, basta adicionar:
+No arquivo main.java.com.voiceassistant.application.CommandService.java, basta adicionar:
 
-    comandos.put("palavraChave", () -> Executor.exec("caminho ou comando aqui"));
+    comandos.put("palavraChave", () -> main.java.com.voiceassistant.infrastructure.CommandExecutor.exec("caminho ou comando aqui"));
 
 ---
 
@@ -138,7 +138,7 @@ No arquivo GerenciadorComandos.java, basta adicionar:
 
 4.  Execute:
 
-    java Main
+    java main.java.com.voiceassistant.app.VoiceAssistantApp
 
 ---
 

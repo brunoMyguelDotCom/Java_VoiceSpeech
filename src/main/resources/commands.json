@@ -1,0 +1,7 @@
+{
+  "wakeWord": "computador",
+  "commands": {
+    "brilho": "explorer.exe \"C:\\Users\\Bruno\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Dimmer.lnk\"",
+    "navegador": "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+  }
+}
