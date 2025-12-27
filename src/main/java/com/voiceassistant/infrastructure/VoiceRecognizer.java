@@ -32,7 +32,7 @@ public class VoiceRecognizer {
         byte[] buffer = new byte[4096];
 
         // som de inicializacao do software
-        SoundPlayer.play("src/main/resources/sounds/start.wav");
+        SoundPlayer.play("src/main/resources/sounds/startup.wav");
         while (true) {
             int bytesRead = microphone.read(buffer, 0, buffer.length);
             if (recognizer.acceptWaveForm(buffer, bytesRead)) {
