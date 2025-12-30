@@ -1,5 +1,7 @@
 package com.voiceassistant.ui;
 
+import com.voiceassistant.audio.SoundPlayer;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -33,6 +35,7 @@ public class TrayIconManager {
         MenuItem exitItem = new MenuItem("Sair");
         exitItem.addActionListener(e -> {
             tray.remove(trayIcon);
+            SoundPlayer.play("src/main/resources/sounds/shutdown.wav");
             System.exit(0);
         });
 
