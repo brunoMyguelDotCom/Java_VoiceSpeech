@@ -1,4 +1,4 @@
-package com.voiceassistant.infrastructure;
+package com.voiceassistant.domain;
 
 import java.util.Map;
 

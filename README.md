@@ -6,141 +6,111 @@
 ---
 
 Este projeto implementa um **assistente de voz offline em Java** utilizando o **Vosk Speech Recognition**.  
-Ele permite a ativação por palavra-chave, execução de comandos do Windows (programas, pastas, atalhos `.lnk`) e inclui um sistema robusto de controle de erros com feedback sonoro.
+O projeto foi modernizado para utilizar **Maven** para gerenciamento de dependências e possui um sistema de configuração dinâmica via **JSON**, permitindo adicionar comandos sem precisar recompilar o código.
 
 ---
 
 ## Principais Recursos
 
-* Reconhecimento de voz totalmente **offline** (Vosk)
-* Palavra de ativação: **“computador”**
-* Execução de programas, pastas e atalhos `.lnk`
-* Sons de ativação, desativação e erro
-* Sistema de detecção de comando inválido:
+* Reconhecimento de voz totalmente **offline** (Vosk).
+* Gerenciamento de projeto via **Maven**.
+* Configuração de comandos externa via arquivo `commands.json` (GSON).
+* Palavra de ativação: **“computador”** (configurável).
+* Execução de programas, pastas e atalhos `.lnk`.
+* Sistema de feedback sonoro (ativação, desativação, erro).
+* Sistema de tolerância a falhas:
     * 1 erro → toca **erro.wav**
-    * Após **3 erros**, o assistente toca **desativar.wav**, desliga o modo comando e só volta com “computador”
-* Arquitetura modular e expansível para novos comandos
-* Captura de áudio configurada para **16000 Hz, 16 bits, mono**
+    * Após **3 erros**, o assistente toca **desativar.wav**, encerra o modo de escuta ativa e aguarda a palavra de ativação novamente.
 
 ---
 
 ## Estrutura do Projeto
 
-main.java.com.voiceassistant.app.VoiceAssistantApp.java
-main.java.com.voiceassistant.infrastructure.CommandExecutor.java
-main.java.com.voiceassistant.application.CommandService.java
-main.java.com.voiceassistant.infrastructure.VoiceRecognizer.java
-main.java.com.voiceassistant.audio.SoundPlayer.java
+A arquitetura segue o padrão de separação de responsabilidades:
 
+* `com.voiceassistant.app.VoiceAssistantApp` - Ponto de entrada (Main).
+* `com.voiceassistant.application.CommandService` - Lógica de negócio e controle de estados.
+* `com.voiceassistant.infrastructure.JsonCommandsReader` - Leitura e parse do arquivo JSON de configuração.
+* `com.voiceassistant.domain.Config` - Classe modelo para as configurações.
+* `com.voiceassistant.infrastructure.VoiceRecognizer` - Integração com a API do Vosk e microfone.
+* `com.voiceassistant.infrastructure.CommandExecutor` - Execução de comandos do sistema operacional.
+* `com.voiceassistant.audio.SoundPlayer` - Reprodução de efeitos sonoros.
 
 ---
 
 ## Funcionamento Geral
 
-### 1. main.java.com.voiceassistant.app.VoiceAssistantApp
-Carrega o modelo Vosk, inicializa o gerenciador e inicia o loop de reconhecimento.
+### 1. Inicialização
+A classe `VoiceAssistantApp` utiliza o `JsonCommandsReader` para carregar as configurações do arquivo `src/main/resources/commands.json`. Se o arquivo não existir, um padrão é criado automaticamente.
 
-### 2. main.java.com.voiceassistant.infrastructure.CommandExecutor
-Executa programas, atalhos e pastas através de `Runtime.getRuntime().exec()`.
+### 2. Reconhecimento (VoiceRecognizer)
+O microfone é configurado (16k Hz, Mono) e o modelo Vosk processa o áudio em tempo real. As frases detectadas são verificadas e enviadas para **CommandService**.
 
-### 3. main.java.com.voiceassistant.application.CommandService
-Responsável por:
-
-* Armazenar comandos em um mapa `Map<String, Runnable>`
-* Ativar e desativar o modo de comandos
-* Controlar tentativas inválidas
-* Reproduzir sons adequados (ativação, desativação, erro)
-
-### 4. main.java.com.voiceassistant.infrastructure.VoiceRecognizer
-* Configuração do microfone
-* Processamento contínuo de áudio
-* Envio do texto reconhecido para o gerenciador
-
-### 5. main.java.com.voiceassistant.audio.SoundPlayer
-Toca arquivos WAV locais via `Clip`.
+### 3. Processamento (CommandService)
+O serviço verifica se a palavra de ativação foi dita.
+* **Modo Ativo:** Compara o texto falado com as chaves do Map carregado do JSON.
+* **Execução:** Se houver correspondência, o `CommandExecutor` roda o comando associado.
+* **Erros:** Gerencia o contador de tentativas falhas e reproduz os sons correspondentes.
 
 ---
 
-## Palavra de Ativação
+## Configuração de Comandos (commands.json)
 
-O assistente entra no modo comando ao detectar: "computador"
+Não é mais necessário alterar o código Java para adicionar comandos. Basta editar o arquivo `src/main/resources/commands.json`.
 
+**Exemplo de estrutura do JSON:**
 
-Enquanto esse modo estiver ativo, qualquer palavra-chave registrada será interpretada como ação.
+    {
+        "wakeWord": "computador",
+        "commands": {
+        "photoshop": "\"C:\\Program Files\\Adobe\\Adobe Photoshop 2023\\Photoshop.exe\"",
+        "navegador": "\"C:\\Program Files\\Mozilla Firefox\\firefox.exe\"",
+        "som": "explorer.exe \"C:\\Users\\User\\Desktop\\Spotify.lnk\""
+        }
+    }
+    
+### Exemplos de Comandos
 
----
-
-## Comportamento para Comandos Inválidos
-
-Quando o assistente está no modo comando:
-
-1. Se o texto reconhecido **não corresponder a nenhum comando**, toca `erro.wav`.
-2. Cada erro incrementa o contador `numTentativas`.
-3. Ao atingir **3 erros**, o assistente:
-    * toca **desativar.wav**
-    * sai do modo comando
-    * zera o contador de tentativas
-    * só reativa com “computador”
-
----
-
-## Exemplos de Comandos
-
-| Palavra-chave | Ação |
-|---------------|------|
-| photoshop | Abre o Adobe Photoshop |
-| desenho | Abre o CorelDRAW |
-| navegador | Abre o Firefox |
-| som | Abre o Spotify via `.lnk` |
-| java | Abre o IntelliJ IDEA |
-| arquivos | Abre uma pasta específica |
-| trabalho | Abre o VS Code via `.lnk` |
-| brilho | Abre o Dimmer via atalho |
-
----
-
-## Adicionando Novos Comandos
-
-No arquivo main.java.com.voiceassistant.application.CommandService.java, basta adicionar:
-
-    comandos.put("palavraChave", () -> main.java.com.voiceassistant.infrastructure.CommandExecutor.exec("caminho ou comando aqui"));
+| Palavra-chave | Descrição da Ação |
+|---------------|-------------------|
+| photoshop     | Abre o Adobe Photoshop |
+| desenho       | Abre o CorelDRAW |
+| navegador     | Abre o Firefox |
+| som           | Abre o Spotify |
+| java          | Abre o IntelliJ IDEA |
+| arquivos      | Abre a pasta de trabalho |
+| trabalho      | Abre o Visual Studio Code |
+| brilho        | Abre o Dimmer (Controle de brilho) |
 
 ---
 
 ## Dependências
 
--   Java 8+
--   Biblioteca Vosk Java
--   Modelo PT do Vosk (ex.: vosk-model-small-pt-0.3)
--   JAR do Vosk incluído no classpath
+* **Java 11+** (Necessário para `Files.readString` e `Map.of`)
+* **Maven** (Gerenciamento de dependências)
+* **Vosk** (Reconhecimento de voz)
+* **GSON** (Google Gson para manipulação de JSON)
 
----
-
-## Configuração do Microfone
-
-    16000 Hz  
-    16 bits  
-    Mono
-
+As dependências são baixadas automaticamente pelo Maven conforme o `pom.xml`.
 
 ---
 
 ## Como Executar
 
-1.  Baixe um modelo PT do Vosk.
-2.  Ajuste o caminho no código:
+1.  **Baixe o Modelo Vosk:**
+    * Baixe um modelo de idioma (ex: `vosk-model-small-pt-0.3`) no site oficial do Vosk.
+    * Extraia na raiz do projeto ou ajuste o caminho na classe `VoiceRecognizer`.
 
-    new Model("CAMINHO_DO_MODELO");
+2.  **Compile e Instale com Maven:**
+    Na raiz do projeto (onde está o `pom.xml`):
 
-3.  Compile:
+    mvn clean install
 
-    javac *.java
+3.  **Execute:**
+    Você pode rodar diretamente pela sua IDE (IntelliJ/Eclipse) ou via linha de comando (se configurado o plugin exec no pom):
 
-4.  Execute:
-
-    java main.java.com.voiceassistant.app.VoiceAssistantApp
+    mvn exec:java -Dexec.mainClass="com.voiceassistant.app.VoiceAssistantApp"
 
 ---
 
 # Licença: Livre para uso, modificação e distribuição.
-

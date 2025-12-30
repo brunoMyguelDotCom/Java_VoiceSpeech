@@ -1,11 +1,9 @@
-package com.voiceassistant.application;// Todos os prints foram utilizados para facilitar o debug
+package com.voiceassistant.application;
 
 import com.voiceassistant.audio.SoundPlayer;
 import com.voiceassistant.infrastructure.CommandExecutor;
-import com.voiceassistant.infrastructure.Config;
+import com.voiceassistant.domain.Config;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class CommandService {
 
@@ -38,6 +36,7 @@ public class CommandService {
                     commandMode = false;
                     trysNum = 0;
                     SoundPlayer.play("src/main/resources/sounds/disable.wav");
+
                     return;
                 }
             }
