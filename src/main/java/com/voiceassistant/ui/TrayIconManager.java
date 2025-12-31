@@ -35,7 +35,15 @@ public class TrayIconManager {
         MenuItem exitItem = new MenuItem("Sair");
         exitItem.addActionListener(e -> {
             tray.remove(trayIcon);
+
             SoundPlayer.play("src/main/resources/sounds/shutdown.wav");
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException x) {
+                x.printStackTrace();
+            }
+
             System.exit(0);
         });
 
