@@ -1,72 +1,163 @@
-# Assistente de Voz em Java (Vosk Speech Recognition)
-
-##  **- Vídeo demonstrativo:**
-[![Assista ao vídeo no YouTube](https://img.youtube.com/vi/MhRuIbfOKZs/hqdefault.jpg)](https://youtu.be/MhRuIbfOKZs)
-
----
-# Assistente de Voz Offline em Java (v2)
-
-### Este projeto implementa um assistente de voz offline em Java utilizando o Vosk Speech Recognition. A versão atual traz arquitetura modular, UI moderna para configuração, execução segura de comandos, e event loop assíncrono, garantindo desempenho, estabilidade e facilidade de manutenção.
+# ASSISTENTE DE VOZ OFFLINE EM JAVA
+(Vosk Speech Recognition)
 
 ---
 
-## Principais Melhorias na v2
+## VÍDEO DEMONSTRATIVO:
 
-- **Arquitetura modular e orientada a domínio:** Separação clara entre infraestrutura, aplicação, domínio e UI.
-- **Interface de configuração GUI completa (ConfigWindow):** Adição, edição e remoção de comandos com atualização dinâmica do arquivo commands.json.
-- **Gerenciamento de estado:** AssistantController para controlar estados (IDLE, LISTENING, PROCESSING).
-- **Event Loop assíncrono:** Processamento contínuo de comandos sem bloqueios.
-- **Feedback sonoro aprimorado:** Sons distintos para ativação, erro, desativação e startup.
-- **Execução de comandos:** Suporta caminhos de executáveis (.exe) e pastas com tratamento de falhas.
-- **Totalmente offline:** Sem dependência de servidores externos.
-- **Maven:** Gerenciamento de dependências e compilação simplificada.
+[![Assista ao vídeo no YouTube](https://img.youtube.com/vi/MhRuIbfOKZs/hqdefault.jpg)](https://youtu.be/MhRuIbfOKZs)=
 
 ---
 
-## Estrutura do Projeto
+## VISÃO GERAL
 
-### Aplicação
-- **AssistantController:** Gerencia o estado do assistente.
-- **CommandService:** Processa comandos reconhecidos e executa ações.
-- **EventLoop:** Loop assíncrono para consumo de eventos de voz.
+Este projeto implementa um assistente de voz offline em Java utilizando o Vosk Speech Recognition, com foco em arquitetura limpa, estabilidade operacional e extensibilidade.
 
-### Domínio
-- **Config:** Modelo de configuração.
-- **ConfigRepository:** Leitura e gravação de JSON.
-- **AssistantState:** Estados do assistente.
-- **VoiceEvent:** Eventos de voz capturados.
+O sistema foi projetado para operar de forma contínua, com processamento assíncrono, gerenciamento explícito de estado, execução segura de comandos do sistema operacional e interface gráfica dedicada para configuração.
 
-### Infraestrutura
-- **VoiceRecognizer:** Integração com Vosk.
-- **CommandExecutor:** Execução de comandos do SO.
-
-### Áudio
-- **SoundPlayer:** Reprodução de sons para feedback.
-
-### UI
-- **ConfigWindow:** Interface de gerenciamento de comandos.
-- **CommandDialog:** Diálogo de adição/edição.
-- **TrayIconManager:** Integração com system tray.
+A aplicação funciona de maneira totalmente offline, sem qualquer dependência de serviços externos, garantindo previsibilidade, desempenho e privacidade.
 
 ---
 
-## Funcionamento Geral
+## PRINCIPAIS CARACTERÍSTICAS
 
-### Inicialização
-Carrega configurações JSON, inicializa GUI e reproduz som de startup.
-
-### Reconhecimento de Voz
-Microfone em 16kHz (mono) com captura contínua de áudio.
-
-### Processamento de Comandos
-EventLoop consome eventos e CommandService executa ações correspondentes.
-
-### Interface de Configuração
-Permite criar/editar comandos sem recompilar o código.
+- Arquitetura modular orientada a domínio
+- Execução de comandos por voz
+- Atualização dinâmica de comandos em tempo de execução
+- Interface gráfica dedicada para configuração
+- Event loop assíncrono e não bloqueante
+- Feedback sonoro baseado no estado do sistema
+- Execução segura de executáveis, atalhos e diretórios
+- Persistência automática de configurações
 
 ---
 
-## Configuração de Comandos (commands.json)
+## ATUALIZAÇÃO DINÂMICA DE COMANDOS
+
+A lista de comandos é armazenada em um arquivo commands.json e pode ser modificada durante a execução da aplicação.
+
+Características:
+
+- Alterações aplicadas imediatamente, sem necessidade de reinicialização
+- Inclusão, edição e remoção de comandos em tempo real
+- Atualização segura do estado interno
+- Ideal para ajustes rápidos, testes e manutenção contínua
+
+---
+
+## INTERFACE GRÁFICA DE CONFIGURAÇÃO
+
+A aplicação possui uma interface gráfica dedicada ao gerenciamento dos comandos, desenvolvida com foco em clareza operacional e usabilidade técnica.
+
+O aplicativo disponibiliza um ícone na área de ícones ocultos da bandeja do sistema (system tray), acessível através da seta de expansão próxima ao relógio do sistema operacional.
+
+Por meio desse ícone, é possível:
+
+- Abrir a interface gráfica de configuração a qualquer momento
+
+- Encerrar o assistente de forma segura
+
+Funcionalidades de configuração:
+
+- Inclusão de novos comandos
+- Edição de comandos existentes
+- Remoção de comandos
+- Atualização imediata do arquivo de configuração
+- Seletor visual de arquivos e diretórios para facilitar a definição de caminhos
+
+O seletor de arquivos reduz erros de configuração e melhora significativamente a experiência de uso.
+
+---
+
+## PROCESSAMENTO ASSÍNCRONO
+
+O sistema utiliza um loop de eventos assíncrono responsável por:
+
+- Captura contínua de áudio
+- Processamento de comandos
+- Execução segura de ações
+- Comunicação controlada com a interface gráfica
+
+Essa abordagem garante estabilidade, previsibilidade e operação contínua mesmo sob uso prolongado.
+
+---
+
+## FEEDBACK SONORO
+
+O assistente fornece feedback auditivo para os seguintes eventos:
+
+- Inicialização do sistema
+- Ativação do modo de escuta
+- Processamento de comandos
+- Ocorrência de erros
+
+---
+
+## ESTRUTURA DO PROJETO
+
+**Aplicação:**
+
+- AssistantController: gerenciamento central do estado do assistente
+- CommandService: processamento e despacho de comandos reconhecidos
+- EventLoop: loop assíncrono responsável pela orquestração dos eventos
+
+**Domínio:**
+
+- Config: modelo de configuração
+- ConfigRepository: leitura e persistência do arquivo JSON
+- AssistantState: estados internos do assistente
+- VoiceEvent: eventos de voz processados
+
+**Infraestrutura:**
+
+- VoiceRecognizer: integração com o motor de reconhecimento Vosk
+- CommandExecutor: execução segura de comandos do sistema operacional
+
+**Áudio:**
+
+- SoundPlayer: reprodução de sons de feedback
+
+**Interface:**
+
+- ConfigWindow: interface gráfica principal
+- CommandDialog: diálogo de criação e edição de comandos
+- TrayIconManager: integração com a bandeja do sistema
+
+---
+
+## FUNCIONAMENTO GERAL
+
+**Inicialização:**
+
+- Carregamento das configurações via json
+- Inicialização da interface gráfica
+- Reprodução do som de inicialização
+
+**Reconhecimento de voz:**
+
+- Captura contínua do microfone em 16kHz (mono)
+
+**Processamento:**
+
+- O EventLoop interpreta eventos de voz
+- O CommandService executa as ações correspondentes
+
+**Interface:**
+
+- Permite alteração dos comandos sem necessidade de recompilação
+
+---
+
+## DIAGRAMA DE FLUXO DE DADOS
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+---
+
+
+## CONFIGURAÇÃO DE COMANDOS (commands.json)
+
+Exemplo:
 
 ```json
 {
@@ -81,42 +172,47 @@ Permite criar/editar comandos sem recompilar o código.
 
 ---
 
-## Exemplos de comandos:
+## EXEMPLOS DE COMANDOS
 
 | Palavra-chave | Ação |
 |---|---|
-| photoshop | Abre Adobe Photoshop |
-| desenho | Abre CorelDRAW |
-| navegador | Abre Firefox |
-| som | Abre Spotify |
+| photoshop | Abre o Adobe Photoshop |
+| desenho | Abre o CorelDRAW |
+| navegador | Abre o Firefox |
+| som | Abre o Spotify |
 
 ---
 
-## Dependências
+## DEPENDÊNCIAS
 
-- Java 11+
+- Java 11 ou superior
 - Maven
 - Vosk API
 - GSON
 
 ---
 
-## Como Compilar e Executar
+## COMPILAÇÃO 
 
-### 1. Baixar modelo Vosk
-Baixe `vosk-model-small-pt-0.3` e extraia na raiz do projeto.
+1. Baixar o modelo Vosk:
+   vosk-model-small-pt-0.3
 
-### 2. Compilar
-```bash
-mvn clean install
+2. Extrair o modelo na raiz do projeto
+
+3. Compilar:
+   mvn clean install
+
+---
+
+## EXECUÇÃO
+
 ```
-
-### 3. Executar
-```bash
 mvn exec:java -Dexec.mainClass="com.voiceassistant.app.VoiceAssistantApp"
 ```
 
 ---
 
-# _Licença: Livre para uso, modificação e distribuição._
+## LICENÇA
+
+Livre para uso, modificação e distribuição.
 

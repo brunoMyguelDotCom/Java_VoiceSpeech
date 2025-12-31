@@ -19,9 +19,16 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class VoiceAssistantApp {
     public static void main(String[] args) throws Exception {
 
+        ConfigRepository repo = new ConfigRepository();
+        Config config = repo.loadConfig();
+
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (Exception ignored) {}
+
         SwingUtilities.invokeLater(() -> {
-            ConfigRepository repo = new ConfigRepository();
-            ConfigWindow window = new ConfigWindow(repo);
+            ConfigWindow window = new ConfigWindow(repo, config);
+
             window.setVisible(false); // começa escondido
 
             TrayIconManager tray = new TrayIconManager(window);
@@ -32,9 +39,6 @@ public class VoiceAssistantApp {
 
         AssistantController controller = new AssistantController();
         controller.setState(AssistantState.LISTENING);
-
-        ConfigRepository commandsReader = new ConfigRepository();
-        Config config = commandsReader.loadConfig();
 
         CommandService commandService = new CommandService(config);
 

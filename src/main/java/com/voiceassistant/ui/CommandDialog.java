@@ -3,6 +3,7 @@ package com.voiceassistant.ui;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.File;
 
 public class CommandDialog extends JDialog {
 
@@ -37,8 +38,18 @@ public class CommandDialog extends JDialog {
 
         fieldsPanel.add(lblFrase);
         fieldsPanel.add(commandField);
+
+        JButton browseButton = createStyledButton("Procurar");
+
+        browseButton.addActionListener(e -> openFileChooser(pathField));
+
+        JPanel pathPanel = new JPanel(new BorderLayout(5, 0));
+        pathPanel.setBackground(BACKGROUND);
+        pathPanel.add(pathField, BorderLayout.CENTER);
+        pathPanel.add(browseButton, BorderLayout.EAST);
+
         fieldsPanel.add(lblCaminho);
-        fieldsPanel.add(pathField);
+        fieldsPanel.add(pathPanel);
 
         mainPanel.add(fieldsPanel, BorderLayout.CENTER);
 
@@ -70,6 +81,29 @@ public class CommandDialog extends JDialog {
         setVisible(true);
     }
 
+    private void openFileChooser(JTextField targetField) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Selecionar executável");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        String current = targetField.getText();
+        if (!current.isBlank()) {
+            File f = new File(current);
+            if (f.exists()) {
+                chooser.setCurrentDirectory(f.getParentFile());
+            }
+        }
+
+        chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Executáveis (*.exe, *.bat, *.cmd, *.lnk)",
+                "exe", "bat", "cmd", "lnk"
+        ));
+
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            targetField.setText(chooser.getSelectedFile().getAbsolutePath());
+        }
+    }
+
     private JTextField createStyledTextField() {
         JTextField field = new JTextField(35);
         field.setBackground(FIELD_BG);
@@ -85,15 +119,24 @@ public class CommandDialog extends JDialog {
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
+
         button.setBackground(new Color(62, 62, 66));
         button.setForeground(FOREGROUND);
+
+        button.setOpaque(true);
+        button.setContentAreaFilled(true);
+        button.setBorderPainted(false);
+
         button.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(82, 82, 86), 1),
                 BorderFactory.createEmptyBorder(8, 20, 8, 20)
         ));
+
         button.setFocusPainted(false);
         button.setFont(new Font("Segoe UI", Font.BOLD, 12));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         return button;
     }
+
 }

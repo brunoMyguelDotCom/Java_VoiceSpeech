@@ -21,12 +21,15 @@ public class ConfigWindow extends JFrame {
 
     private final ConfigRepository repository;
     private final Config config;
+
+    private JTextField wakeWordField;
+
     private final DefaultTableModel tableModel;
     private final JTable table;
 
-    public ConfigWindow(ConfigRepository repository) {
+    public ConfigWindow(ConfigRepository repository, Config config) {
         this.repository = repository;
-        this.config = repository.loadConfig();
+        this.config = config;
 
         setTitle("Voice Assistant - Configurações");
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -36,14 +39,39 @@ public class ConfigWindow extends JFrame {
         mainPanel.setBackground(BACKGROUND);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-
         JLabel titleLabel = new JLabel("Gerenciador de Comandos");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
         titleLabel.setForeground(FOREGROUND);
         titleLabel.setBorder(new EmptyBorder(0, 0, 10, 0));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        tableModel = new DefaultTableModel(new Object[]{"Frase de Comando", "Caminho / Ação"}, 0) {
+        // palavra de ativacao
+        JPanel wakePanel = new JPanel(new BorderLayout(10, 0));
+        wakePanel.setBackground(BACKGROUND);
+        wakePanel.setBorder(new EmptyBorder(0, 0, 10, 0));
+
+        JLabel wakeLabel = new JLabel("Palavra de inicialização:");
+        wakeLabel.setForeground(FOREGROUND);
+        wakeLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+
+        wakeWordField = new JTextField(15);
+        wakeWordField.setText(config.wakeWord);
+        wakeWordField.setBackground(new Color(30, 30, 30));
+        wakeWordField.setForeground(FOREGROUND);
+        wakeWordField.setCaretColor(FOREGROUND);
+        wakeWordField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        wakeWordField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(62, 62, 66), 1),
+                BorderFactory.createEmptyBorder(6, 8, 6, 8)
+        ));
+
+        wakePanel.add(wakeLabel, BorderLayout.WEST);
+        wakePanel.add(wakeWordField, BorderLayout.CENTER);
+
+        mainPanel.add(wakePanel, BorderLayout.BEFORE_FIRST_LINE);
+
+        // TABELA
+        tableModel = new DefaultTableModel(new Object[]{"Frase de Comando", "Caminho Executável/Atalho"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -59,6 +87,7 @@ public class ConfigWindow extends JFrame {
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
+        // botoes
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setBackground(BACKGROUND);
         buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
@@ -126,7 +155,9 @@ public class ConfigWindow extends JFrame {
     }
 
     public void save() {
+        config.wakeWord = wakeWordField.getText().trim();
         repository.save(config);
+        repository.loadConfig();
         JOptionPane.showMessageDialog(this, "Salvo com sucesso!");
     }
 
@@ -151,36 +182,42 @@ public class ConfigWindow extends JFrame {
         header.setBackground(TABLE_HEADER_BG);
         header.setForeground(FOREGROUND);
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        header.setOpaque(true);
+        header.setReorderingAllowed(false);
+        header.setResizingAllowed(true);
 
-        header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, TABLE_GRID));
+        header.setDefaultRenderer((table, value, isSelected, hasFocus, row, column) -> {
+            JLabel lbl = new JLabel(value.toString());
+            lbl.setOpaque(true);
+            lbl.setBackground(TABLE_HEADER_BG);
+            lbl.setForeground(FOREGROUND);
+            lbl.setFont(new Font("Segoe UI", Font.BOLD, 14));
+            lbl.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, TABLE_GRID));
+            lbl.setHorizontalAlignment(SwingConstants.LEFT);
+            return lbl;
+        });
 
         return tbl;
     }
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
+
         button.setBackground(new Color(62, 62, 66));
         button.setForeground(FOREGROUND);
+        button.setOpaque(true);
+        button.setContentAreaFilled(true);
+        button.setBorderPainted(false);
+
         button.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(82, 82, 86), 1),
                 BorderFactory.createEmptyBorder(8, 20, 8, 20)
         ));
+
         button.setFocusPainted(false);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        button.setFont(new Font("Segoe UI", Font.BOLD, 12));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                if (!button.getBackground().equals(ACCENT)) {
-                    button.setBackground(new Color(82, 82, 86));
-                }
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                if (!button.getBackground().equals(ACCENT)) {
-                    button.setBackground(new Color(62, 62, 66));
-                }
-            }
-        });
         return button;
     }
 }
