@@ -5,7 +5,7 @@
 
 ## VÍDEO DEMONSTRATIVO:
 
-[![Assista ao vídeo no YouTube](https://img.youtube.com/vi/MhRuIbfOKZs/hqdefault.jpg)](https://youtu.be/MhRuIbfOKZs)=
+[![Assista ao vídeo no YouTube](https://img.youtube.com/vi/dchL3y-tEr4/hqdefault.jpg)](https://youtu.be/dchL3y-tEr4)
 
 ---
 
@@ -150,6 +150,8 @@ O assistente fornece feedback auditivo para os seguintes eventos:
 
 ## DIAGRAMA DE FLUXO DE DADOS
 
+<img width="1330" height="856" alt="Screenshot 2025-12-31 120854" src="https://github.com/user-attachments/assets/68229fda-5034-4bb2-8519-4cd739bf20ed" />
+
 
 ---
 
@@ -160,12 +162,12 @@ Exemplo:
 
 ```json
 {
-    "wakeWord": "computador",
-    "commands": {
-        "photoshop": "C:\\Program Files\\Adobe\\Adobe Photoshop 2023\\Photoshop.exe",
-        "navegador": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
-        "som": "explorer.exe C:\\Users\\User\\Desktop\\Spotify.lnk"
-    }
+  "wakeWord": "computador",
+  "commands": {
+    "photoshop": "C:\\Program Files\\Adobe\\Adobe Photoshop 2023\\Photoshop.exe",
+    "navegador": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+    "som": "explorer.exe C:\\Users\\User\\Desktop\\Spotify.lnk"
+  }
 }
 ```
 
@@ -191,7 +193,7 @@ Exemplo:
 
 ---
 
-## COMPILAÇÃO 
+## COMPILAÇÃO
 
 1. Baixar o modelo Vosk:
    vosk-model-small-pt-0.3
